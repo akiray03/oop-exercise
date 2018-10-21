@@ -1,12 +1,14 @@
 from drink import Drink
+from drink_stock import DrinkStock
 
 
 class VendingMachine:
 
     def __init__(self):
-        self._quantity_of_coke = 5
-        self._quantity_of_diet_coke = 5
-        self._quantity_of_tea = 5
+        self._stock_of_coke = DrinkStock(drink_kind=Drink.COKE, quantity=5)
+        self._stock_of_diet_coke = DrinkStock(drink_kind=Drink.DIET_COKE, quantity=5)
+        self._stock_of_tea = DrinkStock(drink_kind=Drink.TEA, quantity=5)
+
         self._number_of_100_yen = 10
         self._change = 0
 
@@ -18,14 +20,13 @@ class VendingMachine:
             self._change += payment
             return None
 
-        if (kind_of_drink == Drink.COKE) and (self._quantity_of_coke == 0):
+        if (kind_of_drink == Drink.COKE) and self._stock_of_coke.sold_out():
             self._change += payment
             return None
-        elif (kind_of_drink == Drink.DIET_COKE) and \
-                (self._quantity_of_diet_coke == 0):
+        elif (kind_of_drink == Drink.DIET_COKE) and self._stock_of_diet_coke.sold_out():
             self._change += payment
             return None
-        elif (kind_of_drink == Drink.TEA) and (self._quantity_of_tea == 0):
+        elif (kind_of_drink == Drink.TEA) and self._stock_of_tea.sold_out():
             self._change += payment
             return None
 
@@ -40,11 +41,11 @@ class VendingMachine:
             self._number_of_100_yen -= (payment - 100) / 100
 
         if kind_of_drink == Drink.COKE:
-            self._quantity_of_coke -= 1
+            self._stock_of_coke.decrement()
         elif kind_of_drink == Drink.DIET_COKE:
-            self._quantity_of_diet_coke -= 1
+            self._stock_of_diet_coke.decrement()
         else:
-            self._quantity_of_tea -= 1
+            self._stock_of_tea.decrement()
 
         return Drink(kind_of_drink)
 
