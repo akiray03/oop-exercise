@@ -1,8 +1,9 @@
 from stock import Stock
+from drink import Drink
 
 
 class DrinkStock:
-    def __init__(self, drink_kind: int, quantity: int):
+    def __init__(self, drink_kind: Drink, quantity: int):
         self._drink_kind = drink_kind
         self._stock = Stock(quantity=quantity)
 

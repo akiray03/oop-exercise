@@ -1,10 +1,18 @@
 class Drink:
-    COKE = 0
-    DIET_COKE = 1
-    TEA = 2
+    def __init__(self, price: int):
+        self._price = price
 
-    def __init__(self, kind: int):
-        self._kind = kind
+    def price(self):
+        return self._price
 
-    def get_kind(self) -> int:
-        return self._kind
+
+class Coke(Drink):
+    pass
+
+
+class DietCoke(Drink):
+    pass
+
+
+class Tea(Drink):
+    pass
