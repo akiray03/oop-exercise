@@ -47,10 +47,5 @@ class VendingMachine:
 
         return kind_of_drink
 
-    @staticmethod
-    def available_payment_amount(payment: Currency) -> bool:
-        amount = payment.amount()
-        return amount in [100, 500]
-
     def refund(self) -> Currency:
         return self._payment_machine.refund()
