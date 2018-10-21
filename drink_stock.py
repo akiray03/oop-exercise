@@ -16,3 +16,20 @@ class DrinkStock:
 
     def decrement(self):
         self._stock.decrement()
+
+
+class DrinkStockCollection:
+    def __init__(self):
+        self._dict = dict()
+
+    def append(self, drink_kind :Type[Drink], initial_quantity: int):
+        self._dict[drink_kind] = DrinkStock(
+            drink_kind=drink_kind,
+            quantity=initial_quantity,
+        )
+
+    def lookup(self, drink_kind: Type[Drink]):
+        if drink_kind in self._dict:
+            return self._dict[drink_kind]
+
+        raise RuntimeError('未知の飲み物が選択されました')

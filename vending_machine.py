@@ -2,16 +2,17 @@ from drink import Drink
 from drink import Coke
 from drink import DietCoke
 from drink import Tea
-from drink_stock import DrinkStock
+from drink_stock import DrinkStockCollection
 from typing import Type
 
 
 class VendingMachine:
 
     def __init__(self):
-        self._stock_of_coke = DrinkStock(drink_kind=Coke, quantity=5)
-        self._stock_of_diet_coke = DrinkStock(drink_kind=DietCoke, quantity=5)
-        self._stock_of_tea = DrinkStock(drink_kind=Tea, quantity=5)
+        self._drink_stocks = DrinkStockCollection()
+        self._drink_stocks.append(drink_kind=Coke, initial_quantity=5)
+        self._drink_stocks.append(drink_kind=DietCoke, initial_quantity=5)
+        self._drink_stocks.append(drink_kind=Tea, initial_quantity=5)
 
         self._number_of_100_yen = 10
         self._change = 0
@@ -24,13 +25,9 @@ class VendingMachine:
             self._change += payment
             return None
 
-        if (kind_of_drink == Coke) and self._stock_of_coke.sold_out():
-            self._change += payment
-            return None
-        elif (kind_of_drink == DietCoke) and self._stock_of_diet_coke.sold_out():
-            self._change += payment
-            return None
-        elif (kind_of_drink == Tea) and self._stock_of_tea.sold_out():
+        # 対象商品の在庫が切れている場合は、お釣りに入れる
+        stock = self._drink_stocks.lookup(drink_kind=kind_of_drink)
+        if stock.sold_out():
             self._change += payment
             return None
 
@@ -44,12 +41,8 @@ class VendingMachine:
             self._change += (payment - 100)
             self._number_of_100_yen -= (payment - 100) / 100
 
-        if kind_of_drink == Coke:
-            self._stock_of_coke.decrement()
-        elif kind_of_drink == DietCoke:
-            self._stock_of_diet_coke.decrement()
-        else:
-            self._stock_of_tea.decrement()
+        # 対象商品の在庫を減らす
+        stock.decrement()
 
         return kind_of_drink
 
