@@ -12,32 +12,32 @@ class VendingMachine:
 
     # 投入金額. 100円と500円のみ受け付ける.
     # return. ジュース or None
-    def buy(self, i: int, kind_of_drink: int):
+    def buy(self, payment: int, kind_of_drink: int):
 
-        if (i != 100) and (i != 500):
-            self._change += i
+        if (payment != 100) and (payment != 500):
+            self._change += payment
             return None
 
         if (kind_of_drink == Drink.COKE) and (self._quantity_of_coke == 0):
-            self._change += i
+            self._change += payment
             return None
         elif (kind_of_drink == Drink.DIET_COKE) and \
                 (self._quantity_of_diet_coke == 0):
-            self._change += i
+            self._change += payment
             return None
         elif (kind_of_drink == Drink.TEA) and (self._quantity_of_tea == 0):
-            self._change += i
+            self._change += payment
             return None
 
-        if i == 500 and self._number_of_100_yen < 4:
-            self._change += i
+        if payment == 500 and self._number_of_100_yen < 4:
+            self._change += payment
             return None
 
-        if i == 100:
+        if payment == 100:
             self._number_of_100_yen += 1
-        elif i == 500:
-            self._change += (i - 100)
-            self._number_of_100_yen -= (i - 100) / 100
+        elif payment == 500:
+            self._change += (payment - 100)
+            self._number_of_100_yen -= (payment - 100) / 100
 
         if kind_of_drink == Drink.COKE:
             self._quantity_of_coke -= 1
