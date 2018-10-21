@@ -1,11 +1,8 @@
 from currency import Currency
 from drink import Drink
-from drink import Coke
-from drink import DietCoke
-from drink import Tea
+from drink import DrinkTypes
 from drink_stock import DrinkStockCollection
 from payment_machine import PaymentMachine
-from typing import Type
 
 
 class VendingMachine:
@@ -17,15 +14,15 @@ class VendingMachine:
     @staticmethod
     def _init_drink_stocks() -> DrinkStockCollection:
         stocks = DrinkStockCollection()
-        stocks.append(drink_kind=Coke, initial_quantity=5)
-        stocks.append(drink_kind=DietCoke, initial_quantity=5)
-        stocks.append(drink_kind=Tea, initial_quantity=5)
+        stocks.append(drink_kind=DrinkTypes.lookup('Coke'), initial_quantity=5)
+        stocks.append(drink_kind=DrinkTypes.lookup('DietCoke'), initial_quantity=5)
+        stocks.append(drink_kind=DrinkTypes.lookup('Tea'), initial_quantity=5)
 
         return stocks
 
     # 投入金額. 100円と500円のみ受け付ける.
     # return. ジュース or None
-    def buy(self, payment: Currency, kind_of_drink: Type[Drink]) -> (Drink or None):
+    def buy(self, payment: Currency, kind_of_drink: Drink) -> (Drink or None):
         if not self._payment_machine.is_available_coin(payment=payment):
             return None
 

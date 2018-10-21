@@ -1,10 +1,9 @@
 from stock import Stock
 from drink import Drink
-from typing import Type
 
 
 class DrinkStock:
-    def __init__(self, drink_kind: Type[Drink], quantity: int):
+    def __init__(self, drink_kind: Drink, quantity: int):
         self._drink_kind = drink_kind
         self._stock = Stock(quantity=quantity)
 
@@ -22,13 +21,13 @@ class DrinkStockCollection:
     def __init__(self):
         self._dict = dict()
 
-    def append(self, drink_kind :Type[Drink], initial_quantity: int):
+    def append(self, drink_kind: Drink, initial_quantity: int):
         self._dict[drink_kind] = DrinkStock(
             drink_kind=drink_kind,
             quantity=initial_quantity,
         )
 
-    def lookup(self, drink_kind: Type[Drink]):
+    def lookup(self, drink_kind: Drink):
         if drink_kind in self._dict:
             return self._dict[drink_kind]
 
