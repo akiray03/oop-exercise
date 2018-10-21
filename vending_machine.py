@@ -3,6 +3,7 @@ from drink import Coke
 from drink import DietCoke
 from drink import Tea
 from drink_stock import DrinkStock
+from typing import Type
 
 
 class VendingMachine:
@@ -17,7 +18,7 @@ class VendingMachine:
 
     # 投入金額. 100円と500円のみ受け付ける.
     # return. ジュース or None
-    def buy(self, payment: int, kind_of_drink: Drink):
+    def buy(self, payment: int, kind_of_drink: Type[Drink]):
 
         if (payment != 100) and (payment != 500):
             self._change += payment
