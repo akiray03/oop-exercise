@@ -1,11 +1,12 @@
 from vending_machine import VendingMachine
 from drink import Coke, DietCoke
+from currency import Currency
 
 
 if __name__ == '__main__':
     print('# 200円を入れて 0: COKE を購入')
 
-    money = 200
+    money = Currency(amount=200)
     drink_type = Coke
     vending_machine = VendingMachine()
     my_drink = vending_machine.buy(money, drink_type)
@@ -17,7 +18,7 @@ if __name__ == '__main__':
 
     print('# 500円を入れて 1: DIET_COKE を購入')
 
-    money = 500
+    money = Currency(amount=500)
     drink_type = DietCoke
     vending_machine = VendingMachine()
     my_drink = vending_machine.buy(money, drink_type)

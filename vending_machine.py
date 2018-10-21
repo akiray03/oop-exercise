@@ -1,52 +1,56 @@
+from currency import Currency
 from drink import Drink
 from drink import Coke
 from drink import DietCoke
 from drink import Tea
 from drink_stock import DrinkStockCollection
+from payment_machine import PaymentMachine
 from typing import Type
 
 
 class VendingMachine:
 
     def __init__(self):
-        self._drink_stocks = DrinkStockCollection()
-        self._drink_stocks.append(drink_kind=Coke, initial_quantity=5)
-        self._drink_stocks.append(drink_kind=DietCoke, initial_quantity=5)
-        self._drink_stocks.append(drink_kind=Tea, initial_quantity=5)
+        self._drink_stocks = self._init_drink_stocks()
+        self._payment_machine = PaymentMachine(number_of_100_yen=10)
 
-        self._number_of_100_yen = 10
-        self._change = 0
+    @staticmethod
+    def _init_drink_stocks() -> DrinkStockCollection:
+        stocks = DrinkStockCollection()
+        stocks.append(drink_kind=Coke, initial_quantity=5)
+        stocks.append(drink_kind=DietCoke, initial_quantity=5)
+        stocks.append(drink_kind=Tea, initial_quantity=5)
+
+        return stocks
 
     # 投入金額. 100円と500円のみ受け付ける.
     # return. ジュース or None
-    def buy(self, payment: int, kind_of_drink: Type[Drink]):
-
-        if (payment != 100) and (payment != 500):
-            self._change += payment
+    def buy(self, payment: Currency, kind_of_drink: Type[Drink]) -> (Drink or None):
+        if not self._payment_machine.is_available_coin(payment=payment):
             return None
 
         # 対象商品の在庫が切れている場合は、お釣りに入れる
         stock = self._drink_stocks.lookup(drink_kind=kind_of_drink)
+
         if stock.sold_out():
-            self._change += payment
+            self._payment_machine.pay_without_item(payment=payment)
             return None
 
-        if payment == 500 and self._number_of_100_yen < 4:
-            self._change += payment
+        if not self._payment_machine.pay_with_refundable(payment=payment):
+            self._payment_machine.pay_without_item(payment=payment)
             return None
 
-        if payment == 100:
-            self._number_of_100_yen += 1
-        elif payment == 500:
-            self._change += (payment - 100)
-            self._number_of_100_yen -= (payment - 100) / 100
+        self._payment_machine.pay_jpy100_item(payment=payment)
 
         # 対象商品の在庫を減らす
         stock.decrement()
 
         return kind_of_drink
 
-    def refund(self):
-        result = self._change
-        self._change = 0
-        return result
+    @staticmethod
+    def available_payment_amount(payment: Currency) -> bool:
+        amount = payment.amount()
+        return amount in [100, 500]
+
+    def refund(self) -> Currency:
+        return self._payment_machine.refund()
